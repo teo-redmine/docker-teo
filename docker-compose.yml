@@ -1,0 +1,42 @@
+mysql:
+  image: sameersbn/mysql:latest
+  environment:
+    - DB_USER=redmine
+    - DB_PASS=password
+    - DB_NAME=redmine_production
+  ports:
+    - "3306:3306"
+  volumes:
+    - /srv/docker/teo/mysql:/var/lib/mysql
+redmine:
+  build: .
+  links:
+    - mysql:mysql
+  environment:
+    - TZ=Europe/Madrid
+    - REDMINE_PORT=10083
+    - SMTP_ENABLED=false
+    - SMTP_DOMAIN=www.example.com
+    - SMTP_HOST=smtp.gmail.com
+    - SMTP_PORT=587
+    - SMTP_USER=mailer@example.com
+    - SMTP_PASS=password
+    - SMTP_STARTTLS=true
+    - SMTP_AUTHENTICATION=:login
+    - IMAP_ENABLED=false
+    - IMAP_USER=mailer@example.com
+    - IMAP_PASS=password
+    - IMAP_HOST=imap.gmail.com
+    - IMAP_PORT=993
+    - IMAP_SSL=true
+    - IMAP_INTERVAL=30
+    - UNICORN_WORKERS=1
+    - TEO_ENV=development
+  ports:
+    - "10022:22"
+    - "10083:80"
+  volumes:
+    - /srv/docker/teo/redmine-data:/home/redmine/data
+    - /srv/docker/teo/redmine-logs:/var/log/redmine
+#  dns:
+#    - 10.0.2.3
