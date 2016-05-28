@@ -43,11 +43,8 @@ if [ $TEO_ENV = "development" ]; then
 
   echo "Activating DEBUG log level"
   echo "config.log_level = :debug" >> ${REDMINE_INSTALL_DIR}/config/additional_environment.rb
-  cd "${REDMINE_DATA_DIR}"
-  mkdir -p log
   touch log/production.log
   tail -n0 -f log/production.log &
 fi
 
-cd "${REDMINE_INSTALL_DIR}"
 /sbin/entrypoint.sh "$@"
