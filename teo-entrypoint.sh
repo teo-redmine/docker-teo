@@ -16,6 +16,15 @@ if [ ! -d "${REDMINE_DATA_DIR}/tmp/" ]; then
   git clone https://github.com/alexandermeindl/redmine_favorite_projects.git
 fi;
 
+echo
+echo "Waiting for mysql server to be ready..."
+cd "${REDMINE_INSTALL_DIR}"
+until bundle exec rake db:version &> /dev/null
+do
+  echo "Trying again..."
+done
+echo "mysql server ready."
+
 # Setup for easier development process
 if [ $TEO_ENV = "development" ]; then
   echo "Linking to data-dir plugins"
@@ -40,5 +49,5 @@ if [ $TEO_ENV = "development" ]; then
   tail -n0 -f log/production.log &
 fi
 
-
+cd "${REDMINE_INSTALL_DIR}"
 /sbin/entrypoint.sh "$@"
