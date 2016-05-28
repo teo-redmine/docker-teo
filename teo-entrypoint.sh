@@ -16,6 +16,13 @@ if [ ! -d "${REDMINE_DATA_DIR}/tmp/" ]; then
   git clone https://github.com/alexandermeindl/redmine_favorite_projects.git
 fi;
 
+# Configure container if just created
+if cmp -s config/database.yml config/database.yml.example
+then
+  echo "Configuring container for the first time"
+  /sbin/entrypoint.sh app:init
+fi
+
 echo
 echo "Waiting for mysql server to be ready..."
 cd "${REDMINE_INSTALL_DIR}"
