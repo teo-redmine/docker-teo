@@ -4,7 +4,9 @@
 
 # Prerequisites
 
-To run this application you need [TODO]
+To run this application you must have docker installed. Docker-compose is optional but recommended.
+
+[TODO]
 
 # How to use this image
 
@@ -20,9 +22,24 @@ Running `docker-compose up` will build a docker image and start the service at h
 
 [TODO]
 
-## Persisting your application
+### Persisting your application
 
 The default docker-compose.yml will mount volumes at /srv/docker/teo for the mysql database, files uploaded to redmine, redmine plugins, etc.
+
+
+## Run with external Database
+
+Running Redmine with an external database it's possible too. This option is intended for development environment with more than one simultaneous developers.
+
+To run redmine with external database the link with mysql container _MUST BE REMOVED_, and we need to add several environments vars:
+- DB_TYPE=mysql
+- DB_HOST=mysql.host.es
+- DB_PORT=3306
+- DB_USER=redmine
+- DB_PASS=password
+- DB_NAME=redmine_db_name
+    
+An example docker-compose file to run redmine with compose can be found in _development_env/example/docker-compose.yml_ .
 
 # Upgrade this application
 
