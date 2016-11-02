@@ -16,12 +16,6 @@ if [ ! -d "${REDMINE_DATA_DIR}/tmp/" ]; then
   git clone https://github.com/alexandermeindl/redmine_favorite_projects.git
   git clone https://github.com/teo-redmine/teo_related_issues.git
   git clone https://github.com/teo-redmine/teo_extended_fields.git
-  #Redmine-git-hosting
-  git clone https://github.com/jbox-web/redmine_bootstrap_kit.git
-  cd "${REDMINE_DATA_DIR}/plugins/redmine_bootstrap_kit/"
-  git checkout 0.2.4
-  cd "${REDMINE_DATA_DIR}/plugins/"
-  git clone https://github.com/teo-redmine/redmine_git_hosting.git
 fi;
 
 # Configure container if just created
