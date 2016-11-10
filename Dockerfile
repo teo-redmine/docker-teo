@@ -4,6 +4,32 @@ MAINTAINER juan.leal@juntadeandalucia.es
 RUN apt-get update
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y openssh-server libxml2-dev libxslt1.1 libxslt1-dev build-essential libssh2-1 libssh2-1-dev cmake libgpg-error-dev
 
+RUN mkdir ${REDMINE_HOME}/teo-plugins
+COPY assets/themes/ ${REDMINE_INSTALL_DIR}/public/themes
+COPY assets/plugins ${REDMINE_INSTALL_DIR}/teo-plugins
+COPY assets/setup/sudoers /etc/sudoers.d/redmine
+
+# Para redmine_git_hosting
+RUN adduser --disabled-password --gecos git git
+RUN su - ${GITOLITE_USER} -c " \
+ mkdir -p ${GITOLITE_HOME}/bin; \
+ git clone https://github.com/sitaramc/gitolite.git; \
+ gitolite/install -to ${GITOLITE_HOME}/bin"
+RUN update-rc.d ssh defaults
+
+RUN cd ${REDMINE_INSTALL_DIR}/teo-plugins \
+ && git clone https://github.com/jbox-web/redmine_bootstrap_kit.git \
+ && cd redmine_bootstrap_kit/ \
+ && git checkout 0.2.4 \
+ && cd ${REDMINE_INSTALL_DIR}/teo-plugins \
+ && git clone https://github.com/teo-redmine/redmine_git_hosting.git \
+ && grep -rl "gem 'dalli'" . | xargs sed -i "s/gem 'dalli'/#gem 'dalli'/g"
+
+RUN cd ${REDMINE_INSTALL_DIR}/teo-plugins \
+ && git clone https://github.com/alexandermeindl/redmine_favorite_projects.git \
+ && cd redmine_favorite_projects \
+ && git checkout ef903d083cb3006fe1dc990ab06f26e7c3b76879
+
 COPY assets/setup/restart /sbin/restart
 RUN chmod 755 /sbin/restart
 EXPOSE 80/tcp 443/tcp 22/tcp
